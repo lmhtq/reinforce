@@ -5,18 +5,10 @@ import mdpsolve as sol
 #make results class
 
 # takes 3d list of observations & reward list(if step-wise rewards not included in observations)
-# [obs],[obs,gamma],[obs,gamma,R]
-def learn(*args):
-  obs_ = args[0]
-  gamma = 1
-  if (len(args) > 1):
-    gamma = args[1]
-  if (len(args) > 2):
-    R = args[2]
-    parsed = par.parse(obs_,R)
-  else:
-    parsed = par.parse(obs_)
-  #parsed = [stateMap,actionMap,observations]
+#[obs,gamma, max_iter, verbose, eps]
+def learn(obs,gamma=1,max_iter=1000,verbose=True,eps=1e-3):
+  obs_ = obs
+  parsed = par.parse(obs_)
 
   stateMap = parsed[0]
   actMap = parsed[1]
@@ -25,8 +17,10 @@ def learn(*args):
 
   P = model[0]
   R = model[1]
-  policy = sol.policy(P,gamma,R)
-
+  policy = sol.policy(P,gamma,R,max_iter,verbose,eps)
+  print actMap
+  print policy
+  print stateMap
   #map integer policy and action back to
   strat = {}
   for i in range(0,len(policy)):
